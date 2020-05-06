@@ -1,15 +1,23 @@
-import Vue from 'vue'
-import Router from 'vue-router'
-import HelloWorld from '@/components/HelloWorld'
+import App from '../App'
+const home = r => require.ensure([], () => r(require('../page/home/home')), 'home');
+const login = r => require.ensure([], () => r(require('../page/login/login')), 'login');
 
-Vue.use(Router)
-
-export default new Router({
-  routes: [
+export default [{
+  path: '/',
+  component: App,  //顶层路由，对应index.html
+  children: [      //二级路由。对应App.vue
     {
-      path: '/',
-      name: 'HelloWorld',
-      component: HelloWorld
+      path: '',
+      redirect: '/home'
+    },
+    {
+      path: '/home',
+      component: home
+    },
+    //登陆注册页
+    {
+      path: '/login',
+      component: login
     }
   ]
-})
+}]
