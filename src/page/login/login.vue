@@ -41,12 +41,12 @@
         <p class="login_tips">注册过的用户可凭账号密码登录</p>
         <div class="login_container" @click="mobileLogin">登陆</div>
         <router-link to="/forget" class="to_forget" v-if="!loginWay">重置密码?</router-link>
-        <alert-tip v-if="showAlert" :showHide="showAlert" @closeTip="closeTip" :alertText="alertText"></alert-tip>
+        <!-- <alert-tip v-if="showAlert" :showHide="showAlert" @closeTip="closeTip" :alertText="alertText"></alert-tip> -->
     </div>
 </template>
 <script>
 import headTop from '../../components/header/head'
-import alertTip from '../../components/common/alertTip'
+// import alertTip from '../../components/common/alertTip'
 import {mapState, mapMutations} from 'vuex'
 import {getcaptchas, accountLogin, } from '../../service/getData'
 export default {
@@ -62,14 +62,15 @@ export default {
             userAccount: null,    //用户名
             passWord: null,       //密码
             captchaCodeImg: null,   //验证码地址
+            imgCodeId: null,    //验证码id
             codeNumber: null,    //验证码
-            showAlert: false,    //显示提示组件
-            alertText: null,    //提示的内容
+            // showAlert: false,    //显示提示组件
+            // alertText: null,    //提示的内容
         }
     },
     components: {
         headTop,
-        alertTip
+        // alertTip
     },
     created(){
         this.getCaptchaCode();
@@ -101,6 +102,7 @@ export default {
             let res = await getcaptchas();
             console.log('图片验证码:', res);
             this.captchaCodeImg = res.code;
+            this.imgCodeId = res.id;
         },
         //发送登陆信息
         async mobileLogin(){
@@ -110,33 +112,42 @@ export default {
             }else{
                 //用户名登陆
                 if(!this.userAccount){
-                    this.showAlert = true;
-                    this.alertText = '请输入手机号/邮箱/用户名';
+                    this.$message({
+                        message: '请输入手机号/邮箱/用户名',
+                        type: 'warning'
+                    });
                     return;
                 }else if(!this.passWord){
-                    this.showAlert = true;
-                    this.alertText = '请输入密码';
+                    this.$message({
+                        message: '请输入密码',
+                        type: 'warning'
+                    });
                     return;
                 }else if(!this.codeNumber){
-                    this.showAlert = true;
-                    this.alertText = '请输入验证码';
+                    this.$message({
+                        message: '请输入验证码',
+                        type: 'warning'
+                    });
                     return;
                 }
-                this.userInfo = await accountLogin(this.userAccount, this.passWord, this.codeNumber);
+                this.userInfo = await accountLogin(this.userAccount, this.passWord, this.codeNumber, this.imgCodeId);
             }
+            console.log('userInfo=>>', JSON.stringify(this.userInfo));
             //如果返回的值不正确，则弹出提示框，返回的值正确则返回上一页
             if(!this.userInfo.user_id){
-                this.showAlert = true;
-                this.alertText = this.userInfo.message;
-
+                this.$message({
+                    message: this.userInfo.message,
+                    type: 'warning'
+                });
             }else{
                 this.RECORD_USERINFO(this.userInfo);
                 this.$router.go(-1);
             }
+            this.getCaptchaCode();
         },
-        closeTip(){
-            this.showAlert = false;
-        }
+        // closeTip(){
+        //     this.showAlert = false;
+        // }
     
     }
 }

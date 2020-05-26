@@ -14,8 +14,12 @@ export const getcaptchas = () => fetch('/v1/captchas', {}, 'POST');
 /**
  * 账号密码登陆
  */
-export const accountLogin = () => fetch('/v2/login', {username, password, captcha_code}, 'POST');
+export const accountLogin = (username, password, captcha_code, id) => fetch('/v2/login', {username, password, captcha_code, id}, 'POST');
 
+/**
+ * 获取首页默认地址
+ */
+export const cityGuess = () => fetch('/v1/cities', {type: 'guess'});
 
 
 

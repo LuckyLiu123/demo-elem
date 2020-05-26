@@ -19,6 +19,7 @@
 </template>
 <script>
 import headTop from '../../components/header/head'
+import {cityGuess} from '../../service/getData';
 export default {
     data(){
         return {
@@ -29,6 +30,12 @@ export default {
         }
     },
     mounted(){
+        //获取当前城市
+        cityGuess().then(res => {
+            console.log('获取当前城市:', res);
+            this.guessCity = res.name;
+            this.guessCityid = res.id;
+        })
 
     },
     components: {

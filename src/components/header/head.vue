@@ -33,7 +33,7 @@ export default {
     mounted(){
         //获取用户信息
         this.getUserInfo();
-        console.log('signinUp:', this.signinUp);
+        // console.log('signinUp:', this.signinUp, this.userInfo);
     },
     props: ['signinUp', 'headTitle', 'goBack'],
     computed: {

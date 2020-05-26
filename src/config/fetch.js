@@ -1,9 +1,8 @@
 import {baseUrl} from './env'
 
 export default async(url = '', data = {}, type = 'GET', method = 'fetch') => {
-    type = type.toLowerCase();
+    type = type.toUpperCase();
     url = baseUrl + url;
-    console.log('url:', url);
 
     if(type === 'GET'){
         let dataStr = '';   //数据拼接字符串
@@ -19,7 +18,7 @@ export default async(url = '', data = {}, type = 'GET', method = 'fetch') => {
 
     if(window.fetch && method === 'fetch'){
         let requestConfig = {
-            credentials: 'include',
+            // credentials: 'include',
             method: type,
             headers: {
                 'Accept': 'application/json',
@@ -33,7 +32,7 @@ export default async(url = '', data = {}, type = 'GET', method = 'fetch') => {
                 value: JSON.stringify(data)
             })
         }
-
+        console.log('url:', url, requestConfig);
         try{
             const response = await fetch(url, requestConfig);
             const responseJson = await response.json();
